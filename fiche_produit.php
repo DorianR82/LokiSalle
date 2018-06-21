@@ -103,15 +103,22 @@ if($_POST){
               ?>
             </h2>
           </div>
-          <div class="col-md-5 px-0">
-            <form method="POST" action="fiche_produit.php?id_produit=<?php echo $produit['id_produit']; ?>">
-
-              <?php
-              //********************* PHP ***********************//
-              echo '
-              <input type="text" name="membreID" value="'.$_SESSION['membre']['id_membre'].'" style="display:none">
-              <input type="text" name="produitID" value="'.$produit['id_produit'].'" style="display:none">
+          <div class="col-md-5 px-0"><?php
+            //********************* PHP ***********************//
+            if(userConnect()){
+            echo '
+            <form method="POST" action="fiche_produit.php?id_produit='. $produit['id_produit'] .'">
+              
+              <input type="text" name="membreID" value="'. $_SESSION['membre']['id_membre'] .'" style="display:none">
+              <input type="text" name="produitID" value="'. $produit['id_produit'] .'" style="display:none">
               <input type="submit" class="btn btn-dark float-right" name="reservation" value="Reserver">';
+
+            }else{                
+            echo '
+            <form method="GET" action="connexion.php">
+              
+              <input type="submit" class="btn btn-dark float-right" name="reservation" value="Reserver">';
+              }
               //********************* FIN PHP ***********************//
               ?>
             </form>
