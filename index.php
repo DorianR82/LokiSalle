@@ -114,7 +114,7 @@ if($r_index->rowCount() == 0){
         ////////////////////////////////////////////////
 
         $reponse_du_filtre .= '</small><br>
-        <!-- 
+        <!--
         <small class="text-muted">[ID PRODUIT = '. $index['id_produit'].' ]</small><br>
         <small class="text-muted">[ID SALLE = '. $index['id_salle'].' ]</small><br>
         <small class="text-muted">[CATEGORIE = '. $index['categorie'] .' ]</small><br>
@@ -130,10 +130,8 @@ if($r_index->rowCount() == 0){
   }
 };
 
-
 //********************* FIN PHP ***********************//
 ?>
-
 
       <div class="row">
         <div class="col-lg-3 pr-5">
