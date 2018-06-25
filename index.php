@@ -19,12 +19,12 @@ if(isset($_GET['filtre'])){
     $filtre .= ' AND produit.prix <= '.$_GET['prix'];
   }
   if(isset ($_GET['dateArrivee']) && $_GET['dateArrivee'] != ''){
-    $filtre .= ' AND produit.date_arrivee >= \''.$_GET['dateArrivee'].' 09:00:00\'';
+    $filtre .= ' AND produit.date_arrivee >= \''.$_GET['dateArrivee'].'\'';
   }
   if(isset ($_GET['dateDepart']) && $_GET['dateDepart'] != ''){
-    $filtre .= ' AND produit.date_depart >= \''.$_GET['dateDepart'].' 19:00:00\'';
+    $filtre .= ' AND produit.date_depart <= \''.$_GET['dateDepart'].'\'';
   }
-  print_r($filtre);
+  //print_r($filtre);
   $r_index = execute_requete
   ("SELECT * FROM produit
       JOIN salle
@@ -57,7 +57,7 @@ if(isset($_GET['filtre'])){
 
             <label for="capaciteSalle"><h5 class="mt-4 mb-0">Capacité des salles</h5></label>
             <select name="capaciteSalle" class="form-control">
-              <option><a href="#" class="list-group-item">-- Select Capacity --</a></option>
+              <option><a href="#" class="list-group-item">Sélectionner</a></option>
               <option value="10"><a href="?action=tri&capacite=10" class="list-group-item">10 personnes</a></option>
               <option value="20"><a href="?action=tri&capacite=20" class="list-group-item">20 personnes</a></option>
               <option value="30"><a href="?action=tri&capacite=30" class="list-group-item">30 personnes</a></option>
@@ -82,7 +82,10 @@ if(isset($_GET['filtre'])){
                 <h6 style="font-size:13px;" class="float-right">1000€</h6>
               </div>
             </div>
+            <div class="row">
+            <div class="col-12">
             <input type="range" name="prix" value="0" min="0" max="1000" style="width:100%"; list="tickmarks"  step="100">
+            <!--
               <datalist id="tickmarks">
                 <option value="0">
                 <option value="100">
@@ -96,6 +99,8 @@ if(isset($_GET['filtre'])){
                 <option value="900">
                 <option value="1000">
               </datalist>
+             --> 
+            </div></div>
 
             <label for="dateArrivee"><h5 class="mt-4 mb-1">Date d'arrivée</h5></label>
             <input type="date" id="dateArrivee" name="dateArrivee" style="width:100%; border-radius:5px; border:1px solid #ced4da; padding:4px;">
@@ -138,7 +143,7 @@ if(isset($_GET['filtre'])){
             echo '
             <div class="col-lg-4 col-md-6 mb-4 mt-5">
               <div class="card h-100">
-                <a href="#"><img class="card-img-top" src="'. $index['photo'] .'" alt="" height ="180px"></a>
+                <a href="fiche_produit.php?id_produit='. $index['id_produit'] .'"><img class="card-img-top" src="'. $index['photo'] .'" alt="" height ="180px"></a>
                 <div class="card-body">
                   <h4 class="card-title mb-2">
                     <a href="fiche_produit.php?id_produit='. $index['id_produit'] .'">'. $index['titre'] .'</a>
@@ -155,7 +160,7 @@ if(isset($_GET['filtre'])){
                     echo '&#9734;';
                   }
                   echo '</small><br>
-
+                  <!--
                   <small class="text-muted">[ID PRODUIT = '. $index['id_produit'].' ]</small><br>
                   <small class="text-muted">[ID SALLE = '. $index['id_salle'].' ]</small><br>
                   <small class="text-muted">[CATEGORIE = '. $index['categorie'] .' ]</small><br>
@@ -163,6 +168,7 @@ if(isset($_GET['filtre'])){
                   <small class="text-muted">[CAPACITE = '. $index['capacite'] .' ]</small><br>
                   <small class="text-muted">[ARRIVEE = '. $index['date_arrivee'] .' ]</small><br>
                   <small class="text-muted">[DEPART = '. $index['date_depart'] .' ]</small><br>
+                  -->
                 </div>
               </div>
             </div>';
