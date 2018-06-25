@@ -37,6 +37,8 @@
                                             <a class="dropdown-item" href="<?= URL ?>admin/gestion_membre.php">Gestion des Membres</a>
                                             <a class="dropdown-item" href="<?= URL ?>admin/gestion_commande.php">Gestion des Commandes</a>
                                             <a class="dropdown-item" href="<?= URL ?>admin/gestion_avis.php">Gestion des Avis</a>
+                                            <a class="dropdown-item" href="<?= URL ?>admin/statistique.php">Statistiques</a>
+
                               </div>
                             </li>
                             <?php endif; ?>
