@@ -6,12 +6,13 @@ $content .= '<h3 class="mt-5">GESTION DES SALLES</h3>
                 </div>';
 $content .= '<a href="?action=affichage">Affichage des salles</a><br>';
 $content .= '<a href="?action=ajout">Ajout d\'une salle</a><br><hr>';
-
+//================================================================
 //Suppression d'une Salle:
 if( isset($_GET['action']) && $_GET['action'] == 'suppression'){
         $r = execute_requete("SELECT * FROM salle WHERE id_salle='$_GET[id_salle]'");
         $salle_a_supprimer = $r->fetch(PDO::FETCH_ASSOC);
-        $modif = str_replace('http://localhost',$_SERVER['DOCUMENT_ROOT'],$salle_a_supprimer);
+        //$modif = str_replace('http://localhost',$_SERVER['DOCUMENT_ROOT'],$salle_a_supprimer);
+        $modif = str_replace('http://serverapache',$_SERVER['DOCUMENT_ROOT'],$salle_a_supprimer);
         $chemin_Photo_a_Supprimer = $modif['photo'];
         if(!empty($chemin_Photo_a_Supprimer)&&file_exists($chemin_Photo_a_Supprimer)){
                 unlink($chemin_Photo_a_Supprimer);
@@ -19,7 +20,7 @@ if( isset($_GET['action']) && $_GET['action'] == 'suppression'){
         execute_requete("DELETE FROM salle WHERE id_salle=$_GET[id_salle]");
         header('location:gestion_salle.php?action=affichage');
 }
-
+//================================================================
 //Enregistrement des salles:
 if(!empty($_POST)){
         $photo_bdd = '';
@@ -74,7 +75,7 @@ if(!empty($_POST)){
                 $content .= '<div class="alert alert-success">La salle a bien été ajouté.</div>';
         }
 }
-
+//================================================================
 //Affichage des salles:
 if( isset($_GET['action']) && $_GET['action'] == 'affichage' ){
         $r = execute_requete("SELECT * FROM salle");
@@ -104,12 +105,13 @@ if( isset($_GET['action']) && $_GET['action'] == 'affichage' ){
         }
         $content .= '</table>';
 }
-
+//================================================================
 //Affichage du formulaire:
 if( isset($_GET['action']) && ($_GET['action'] == 'ajout' || $_GET['action'] == 'modification') ){
         if( isset($_GET['id_salle']) ){
                 $r = execute_requete("SELECT * FROM salle WHERE id_salle = $_GET[id_salle]");
                 $salle_actuel = $r->fetch(PDO::FETCH_ASSOC);
+                var_dump($_GET);debug($salle_actuel);
         }
 
 $titre = ( isset($salle_actuel['titre']) )  ? $salle_actuel['titre'] : '' ;
@@ -179,6 +181,6 @@ $cp = ( isset($salle_actuel['cp']) )  ? $salle_actuel['cp'] : '' ;
 
         </form>';
 }
-?>
+//================================================================?>
 <?= $content ?>
 <?php require_once('inc/footer.admin.inc.php');?>

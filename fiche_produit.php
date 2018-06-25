@@ -21,19 +21,13 @@ if( isset($_GET['id_produit']) ){
 
   // === Calcul de la moyenne des notes pour afficher les étoiles. === //
   $resNote = execute_requete(
-    "SELECT note
+    "SELECT ROUND(AVG(note))
+    AS note
     FROM avis
     WHERE id_salle = $produit[id_salle]
-    GROUP BY id_membre");
-    $recupNote = $resNote->fetch(PDO::FETCH_ASSOC);
-    $integer_note ='';
-
-    while($recupNote = $resNote->fetch(PDO::FETCH_ASSOC)){
-      $integer_note  = $integer_note + $recupNote['note'];
-    }
-
-    $moyenne = round($integer_note / $resNote->rowCount());
-    $etoilevide = 5 - $moyenne;
+    ");
+    $moyenne = $resNote->fetch(PDO::FETCH_ASSOC);
+    $etoilevide = 5 - $moyenne['note'];
 
 }else{
        header('location:index.php');
@@ -94,7 +88,7 @@ if($_POST){
             <h2>
               <?php
               echo $salle['titre'].' ';
-              for ($i=0; $i < $moyenne; $i++) {
+              for ($i=0; $i < $moyenne['note']; $i++) {
                 echo '★';
               }
               for ($i=0; $i < $etoilevide; $i++) {
@@ -103,15 +97,22 @@ if($_POST){
               ?>
             </h2>
           </div>
-          <div class="col-md-5 px-0">
-            <form method="POST" action="fiche_produit.php?id_produit=<?php echo $produit['id_produit']; ?>">
-
-              <?php
-              //********************* PHP ***********************//
-              echo '
-              <input type="text" name="membreID" value="'.$_SESSION['membre']['id_membre'].'" style="display:none">
-              <input type="text" name="produitID" value="'.$produit['id_produit'].'" style="display:none">
+          <div class="col-md-5 px-0"><?php
+            //********************* PHP ***********************//
+            if(userConnect()){
+            echo '
+            <form method="POST" action="fiche_produit.php?id_produit='. $produit['id_produit'] .'">
+              
+              <input type="text" name="membreID" value="'. $_SESSION['membre']['id_membre'] .'" style="display:none">
+              <input type="text" name="produitID" value="'. $produit['id_produit'] .'" style="display:none">
               <input type="submit" class="btn btn-dark float-right" name="reservation" value="Reserver">';
+
+            }else{                
+            echo '
+            <form method="GET" action="connexion.php">
+              
+              <input type="submit" class="btn btn-dark float-right" name="reservation" value="Reserver">';
+              }
               //********************* FIN PHP ***********************//
               ?>
             </form>
