@@ -1,13 +1,18 @@
 <?php require_once('inc/header.inc.php');?>
 <?php
 //********************* PHP ***********************//
-// === Si un produit est selectionné on entre dans la boucle sinon retour a la page d'index. === //
+
+  ///////////////////////////////////////////////////////////////////////////////////////////
+ // Si un produit est selectionné on entre dans la boucle sinon retour a la page d'index. //
+///////////////////////////////////////////////////////////////////////////////////////////
+
 if( isset($_GET['id_produit']) ){
 
   $resproduit = execute_requete(
     "SELECT *
     FROM produit
     WHERE id_produit = '$_GET[id_produit]' ");
+
   $produit = $resproduit->fetch(PDO::FETCH_ASSOC);
 
   $ressalle = execute_requete(
@@ -17,24 +22,62 @@ if( isset($_GET['id_produit']) ){
       SELECT id_salle
       FROM produit
       WHERE id_produit = '$_GET[id_produit]')");
+
   $salle = $ressalle->fetch(PDO::FETCH_ASSOC);
 
-  // === Calcul de la moyenne des notes pour afficher les étoiles. === //
+   ///////////////////////////////////////////////////////////////////////////
+  // Calcul de la moyenne des notes de la salle pour afficher les étoiles. //
+ ///////////////////////////////////////////////////////////////////////////
+
   $resNote = execute_requete(
     "SELECT ROUND(AVG(note))
     AS note
     FROM avis
     WHERE id_salle = $produit[id_salle]
     ");
+
     $moyenne = $resNote->fetch(PDO::FETCH_ASSOC);
     $etoilevide = 5 - $moyenne['note'];
 
+    /////////////////////////////////////////////////////////////////////////////
+   // Affichage du titre de la salle et de la note illustrée par des étoiles. //
+  /////////////////////////////////////////////////////////////////////////////
+  
+  $enTete = $salle['titre'].' ';
+  for ($i=0; $i < $moyenne['note']; $i++) {
+    $enTete .= '★';
+  }
+  for ($i=0; $i < $etoilevide; $i++) {
+    $enTete .= '☆';
+  }
+
+}else{ header('location:index.php'); exit(); }
+
+  ///////////////////////////////////////
+ // Bonton de reservation interactif. //
+///////////////////////////////////////
+
+$btn_reza = '';
+if(userConnect()){
+$btn_reza .= '
+<form method="POST" action="fiche_produit.php?id_produit='. $produit['id_produit'] .'">
+  <input type="text" name="membreID" value="'. $_SESSION['membre']['id_membre'] .'" style="display:none">
+  <input type="text" name="produitID" value="'. $produit['id_produit'] .'" style="display:none">
+  <input type="submit" class="btn btn-dark float-right" name="reservation" value="Reserver">
+</form>';
 }else{
-       header('location:index.php');
-   exit();
-}
+  $btn_reza .= '
+  <form method="GET" action="connexion.php">
+  <input type="submit" class="btn btn-dark float-right" name="reservation" value="Reserver">
+</form>';
+}              
+
+  ////////////////////////////////////////////////////////////
+ // Enregistrement des commandes par le bouton reservation //
+////////////////////////////////////////////////////////////
 
 if($_POST){
+
   $enregistrement = date("Y\-m\-d\ h:i:s");
 
   if(isset ($_POST['reservation'])){
@@ -50,11 +93,17 @@ if($_POST){
         '$enregistrement'
       )");
   }
-  if (isset ($_POST['notation'])){
-    $prout = execute_requete("SELECT*FROM avis WHERE id_membre = '$_POST[membreID]'");
-    $zizi = $prout->fetch(PDO::FETCH_ASSOC);
 
-    if($_POST['salleID'] == $zizi['id_salle']){
+   //////////////////////////////////////////////////////////////////////////////////////
+  // Boucle pour éviter plusieurs notes sur la même salle de la part d'un même membre. //
+ //////////////////////////////////////////////////////////////////////////////////////
+
+  if (isset ($_POST['notation'])){
+
+    $r_notation = execute_requete("SELECT*FROM avis WHERE id_membre = '$_POST[membreID]'");
+    $r_note = $r_notation->fetch(PDO::FETCH_ASSOC);
+
+    if($_POST['salleID'] == $r_note['id_salle']){
       execute_requete(
         "UPDATE avis
         SET
@@ -81,41 +130,55 @@ if($_POST){
     }
   }
 }
+
+////////////////////////////////////////////////////
+// Tirage au sort des vignettes de propositions. //
+///////////////////////////////////////////////////
+
+$vignettes = '';
+$r_vignettes = execute_requete(
+  "SELECT
+  MIN(id_produit)
+  AS MIN,
+  MAX(id_produit)
+  AS MAX
+  FROM produit");
+$proposition = $r_vignettes->fetch(PDO::FETCH_ASSOC);
+
+for ($i=0;$i<4;$i++){
+
+  do{
+
+    $id_random = rand($proposition['MIN'], $proposition['MAX']);
+    $r_random = execute_requete(
+      "SELECT
+      produit.id_produit,
+      produit.etat,
+      salle.photo
+      FROM produit
+      JOIN salle
+      ON produit.id_salle = salle.id_salle
+      WHERE produit.id_produit = $id_random");
+    $photo = $r_random->fetch(PDO::FETCH_ASSOC);
+
+  }while($produit['id_produit'] == $id_random || $photo['etat'] === 'reservation' || $photo['id_produit'] == NULL);
+
+  $vignettes .= '
+  <div class="col-md-3">
+    <a href="fiche_produit.php?id_produit='. $photo['id_produit'] .'"><img src="'. $photo['photo'] .'"  alt="" class="w-100"></a>
+  </div>';
+}
+
 //********************* FIN PHP ***********************//
 ?>
         <div class="row mt-3">
           <div class="col-md-7 px-0">
             <h2>
-              <?php
-              echo $salle['titre'].' ';
-              for ($i=0; $i < $moyenne['note']; $i++) {
-                echo '★';
-              }
-              for ($i=0; $i < $etoilevide; $i++) {
-                echo '☆';
-              }
-              ?>
+              <?= $enTete ?>
             </h2>
           </div>
-          <div class="col-md-5 px-0"><?php
-            //********************* PHP ***********************//
-            if(userConnect()){
-            echo '
-            <form method="POST" action="fiche_produit.php?id_produit='. $produit['id_produit'] .'">
-              
-              <input type="text" name="membreID" value="'. $_SESSION['membre']['id_membre'] .'" style="display:none">
-              <input type="text" name="produitID" value="'. $produit['id_produit'] .'" style="display:none">
-              <input type="submit" class="btn btn-dark float-right" name="reservation" value="Reserver">';
-
-            }else{                
-            echo '
-            <form method="GET" action="connexion.php">
-              
-              <input type="submit" class="btn btn-dark float-right" name="reservation" value="Reserver">';
-              }
-              //********************* FIN PHP ***********************//
-              ?>
-            </form>
+          <div class="col-md-5 px-0">
+            <?= $btn_reza ?>
           </div>
          </div>
           <div class="row mt-3">
@@ -165,42 +228,7 @@ if($_POST){
             </div>
           </div>
           <div class="row mt-2">
-            <?php
-            //******************* PHP *************************//
-            // === Tirage au sort des vignettes de propositions. === //
-            $caca = execute_requete(
-              "SELECT
-                MIN(id_produit)
-                  AS MIN,
-                MAX(id_produit)
-                  AS MAX
-              FROM produit");
-            $proposition = $caca->fetch(PDO::FETCH_ASSOC);
-
-            for ($i=0;$i<4;$i++){
-              do{
-                $id_random = rand($proposition['MIN'], $proposition['MAX']);
-                $pipi = execute_requete(
-                  "SELECT
-                    produit.id_produit,
-                    produit.etat,
-                    salle.photo
-                  FROM produit
-                  JOIN salle
-                    ON produit.id_salle = salle.id_salle
-                  WHERE
-                    produit.id_produit = $id_random");
-                $photo = $pipi->fetch(PDO::FETCH_ASSOC);
-                //print_r($id_random);
-                //debug($photo);
-              }while($produit['id_produit'] == $id_random || $photo['etat'] === 'reservation' || $photo['id_produit'] == NULL);
-              echo '
-              <div class="col-md-3">
-                <a href="fiche_produit.php?id_produit='. $photo['id_produit'] .'"><img src="'. $photo['photo'] .'"  alt="" class="w-100"></a>
-              </div>';
-            }
-            //********************* FIN PHP ***********************//
-            ?>
+            <?= $vignettes ?>
           </div>
 
           <!-- DEBUT DU MODULE DEPOSER UN COMMENTAIRE -->
@@ -243,7 +271,5 @@ if($_POST){
               <h6 class="float-right"><a href="index.php">Retour vers le catalogue</a></h6>
             </div>
           </div>
-
-
 
 <?php require_once('inc/footer.inc.php');?>
