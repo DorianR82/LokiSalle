@@ -83,24 +83,25 @@ if(isset($_GET['filtre'])){
               </div>
             </div>
             <div class="row">
-            <div class="col-12">
-            <input type="range" name="prix" value="0" min="0" max="1000" style="width:100%"; list="tickmarks"  step="100">
-            <!--
-              <datalist id="tickmarks">
-                <option value="0">
-                <option value="100">
-                <option value="200">
-                <option value="300">
-                <option value="400">
-                <option value="500">
-                <option value="600">
-                <option value="700">
-                <option value="800">
-                <option value="900">
-                <option value="1000">
-              </datalist>
-             --> 
-            </div></div>
+              <div class="col-12">
+                <input type="range" name="prix" value="0" min="0" max="1000" style="width:100%"; list="tickmarks"  step="100">
+                <!--
+                <datalist id="tickmarks">
+                  <option value="0">
+                  <option value="100">
+                  <option value="200">
+                  <option value="300">
+                  <option value="400">
+                  <option value="500">
+                  <option value="600">
+                  <option value="700">
+                  <option value="800">
+                  <option value="900">
+                  <option value="1000">
+                </datalist>
+                -->
+              </div>
+            </div>
 
             <label for="dateArrivee"><h5 class="mt-4 mb-1">Date d'arrivée</h5></label>
             <input type="date" id="dateArrivee" name="dateArrivee" style="width:100%; border-radius:5px; border:1px solid #ced4da; padding:4px;">
