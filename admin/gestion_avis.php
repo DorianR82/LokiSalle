@@ -146,15 +146,14 @@ $content .= '<form method="post">
                 <input type="submit">
         </div>
 </form>';
-
-
-
 ?>
 
 
-<h3 class="mt-5">GESTION DES AVIS</h3>
-<div class="row mt-3">
-<div class="col-md-12 px-0" style="height:2px; width:100%; border-bottom: 1px solid black;"></div>
-</div>
-<?= $content ?>
+      <h3 class="mt-5">GESTION DES AVIS</h3>
+      <div class="row mt-3">
+        <div class="col-md-12 px-0" style="height:2px; width:100%; border-bottom: 1px solid black;"></div>
+      </div>
+
+      <?= $content ?>
+      
 <?php require_once('inc/footer.admin.inc.php');?>

@@ -1,12 +1,15 @@
 <?php require_once('inc/header.inc.php'); ?>
 <?php
+
 if(isset($_GET['action']) && $_GET['action'] == 'deconnexion'){
         session_destroy();
 }
+
 if(userConnect()){
         header('location:profil.php');
         exit();
 }
+
 if($_POST){
         //debug($_POST);
         $r = execute_requete("SELECT * FROM membre WHERE pseudo = '$_POST[pseudo]' ");
