@@ -21,19 +21,13 @@ if( isset($_GET['id_produit']) ){
 
   // === Calcul de la moyenne des notes pour afficher les étoiles. === //
   $resNote = execute_requete(
-    "SELECT note
+    "SELECT ROUND(AVG(note))
+    AS note
     FROM avis
     WHERE id_salle = $produit[id_salle]
-    GROUP BY id_membre");
-    $recupNote = $resNote->fetch(PDO::FETCH_ASSOC);
-    $integer_note ='';
-
-    while($recupNote = $resNote->fetch(PDO::FETCH_ASSOC)){
-      $integer_note  = $integer_note + $recupNote['note'];
-    }
-
-    $moyenne = round($integer_note / $resNote->rowCount());
-    $etoilevide = 5 - $moyenne;
+    ");
+    $moyenne = $resNote->fetch(PDO::FETCH_ASSOC);
+    $etoilevide = 5 - $moyenne['note'];
 
 }else{
        header('location:index.php');
@@ -94,7 +88,7 @@ if($_POST){
             <h2>
               <?php
               echo $salle['titre'].' ';
-              for ($i=0; $i < $moyenne; $i++) {
+              for ($i=0; $i < $moyenne['note']; $i++) {
                 echo '★';
               }
               for ($i=0; $i < $etoilevide; $i++) {

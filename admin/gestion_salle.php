@@ -1,6 +1,5 @@
 <?php require_once('inc/header.admin.inc.php');?>
 <?php
-
 $content .= '<h3 class="mt-5">GESTION DES SALLES</h3>
                 <div class="row mt-3 mb-4">
                 <div class="col-md-12 px-0" style="height:2px; width:100%; border-bottom: 1px solid black;"></div>
@@ -12,7 +11,8 @@ $content .= '<a href="?action=ajout">Ajout d\'une salle</a><br><hr>';
 if( isset($_GET['action']) && $_GET['action'] == 'suppression'){
         $r = execute_requete("SELECT * FROM salle WHERE id_salle='$_GET[id_salle]'");
         $salle_a_supprimer = $r->fetch(PDO::FETCH_ASSOC);
-        $modif = str_replace('http://localhost',$_SERVER['DOCUMENT_ROOT'],$salle_a_supprimer);
+        //$modif = str_replace('http://localhost',$_SERVER['DOCUMENT_ROOT'],$salle_a_supprimer);
+        $modif = str_replace('http://serverapache',$_SERVER['DOCUMENT_ROOT'],$salle_a_supprimer);
         $chemin_Photo_a_Supprimer = $modif['photo'];
         if(!empty($chemin_Photo_a_Supprimer)&&file_exists($chemin_Photo_a_Supprimer)){
                 unlink($chemin_Photo_a_Supprimer);
@@ -111,6 +111,7 @@ if( isset($_GET['action']) && ($_GET['action'] == 'ajout' || $_GET['action'] == 
         if( isset($_GET['id_salle']) ){
                 $r = execute_requete("SELECT * FROM salle WHERE id_salle = $_GET[id_salle]");
                 $salle_actuel = $r->fetch(PDO::FETCH_ASSOC);
+                var_dump($_GET);debug($salle_actuel);
         }
 
 $titre = ( isset($salle_actuel['titre']) )  ? $salle_actuel['titre'] : '' ;

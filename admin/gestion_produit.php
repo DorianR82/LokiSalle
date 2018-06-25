@@ -3,17 +3,12 @@
 $content .= '<a href="?action=affichage">Affichage des produits</a><br>';
 $content .= '<a href="?action=ajout">Ajout d\'un produit</a><br><hr>';
 
-//Suppression d'une produit:
+//Suppression d'un produit:
 if( isset($_GET['action']) && $_GET['action'] == 'suppression'){
   $r = execute_requete("SELECT * FROM produit WHERE id_produit='$_GET[id_produit]'");
   $produit_a_supprimer = $r->fetch(PDO::FETCH_ASSOC);
-  $modif = str_replace('http://localhost',$_SERVER['DOCUMENT_ROOT'],$produit_a_supprimer);
-    $chemin_Photo_a_Supprimer = $modif['photo'];
-    if(!empty($chemin_Photo_a_Supprimer)&&file_exists($chemin_Photo_a_Supprimer)){
-      unlink($chemin_Photo_a_Supprimer);
-    }
-    execute_requete("DELETE FROM produit WHERE id_produit=$_GET[id_produit]");
-    header('location:gestion_produit.php?action=affichage');
+  execute_requete("DELETE FROM produit WHERE id_produit=$_GET[id_produit]");
+  header('location:gestion_produit.php?action=affichage');
 }
 
 //Enregistrement des produits:
@@ -61,7 +56,6 @@ if(!empty($_POST)){
     $content .= '<div class="alert alert-success">Le produit a bien été ajouté.</div>';
   }
 }
-
 //Affichage des produits:
 if( isset($_GET['action']) && $_GET['action'] == 'affichage' ){
   $r = execute_requete("SELECT * FROM produit");

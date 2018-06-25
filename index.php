@@ -24,28 +24,21 @@ if(isset($_GET['filtre'])){
   if(isset ($_GET['dateDepart']) && $_GET['dateDepart'] != ''){
     $filtre .= ' AND produit.dateDepart >= \''.$_GET['dateDepart'].'\'';
   }
-  //print_r($filtre);
+  print_r($filtre);
   $r_index = execute_requete
   ("SELECT * FROM produit
       JOIN salle
         ON produit.id_salle = salle.id_salle
-      JOIN avis
-        ON avis.id_salle = salle.id_salle
       WHERE
         produit.etat = 'libre'
         $filtre
-      GROUP BY produit.id_produit
       ORDER BY produit.id_produit ASC");
-  //debug($r_index);
 }else{
   $r_index = execute_requete
   ("SELECT * FROM produit 
       JOIN salle
         ON produit.id_salle = salle.id_salle
-      JOIN avis
-        ON avis.id_salle = salle.id_salle
       WHERE produit.etat = 'libre'
-      GROUP BY produit.id_produit
       ORDER BY produit.id_produit ASC");
 }
 //================================================================?>
@@ -129,6 +122,19 @@ if(isset($_GET['filtre'])){
             </div>';
           }else{
             while($index = $r_index->fetch(PDO::FETCH_ASSOC)){
+              $resNote = execute_requete(
+                "SELECT ROUND(AVG(note))
+                AS note
+                FROM avis
+                JOIN salle
+                  ON avis.id_salle = salle.id_salle
+                JOIN produit
+                  ON salle.id_salle = produit.id_salle
+                WHERE avis.id_salle = $index[id_salle]
+                ");
+                $moyenne = $resNote->fetch(PDO::FETCH_ASSOC);
+                $etoilevide = 5 - $moyenne['note'];
+
             echo '
             <div class="col-lg-4 col-md-6 mb-4 mt-5">
               <div class="card h-100">
@@ -141,7 +147,22 @@ if(isset($_GET['filtre'])){
                   <p class="card-text float-left">'.$index['description'].'</p>
                 </div>
                 <div class="card-footer">
-                  <small class="text-muted">'. $index['note'] .'&#9733; &#9733; &#9733; &#9733; &#9734; [ID PRODUIT '. $index['id_produit'].']</small>
+                  <small class="text-muted">';
+                  for ($i=0; $i < $moyenne['note']; $i++) {
+                    echo '&#9733;';
+                  }
+                  for ($i=0; $i < $etoilevide; $i++) {
+                    echo '&#9734;';
+                  }
+                  echo '</small><br>
+
+                  <small class="text-muted">[ID PRODUIT = '. $index['id_produit'].' ]</small><br>
+                  <small class="text-muted">[ID SALLE = '. $index['id_salle'].' ]</small><br>
+                  <small class="text-muted">[CATEGORIE = '. $index['categorie'] .' ]</small><br>
+                  <small class="text-muted">[NOTE = '. $moyenne['note'] .' ]</small><br>
+                  <small class="text-muted">[CAPACITE = '. $index['capacite'] .' ]</small><br>
+                  <small class="text-muted">[ARRIVEE = '. $index['date_arrivee'] .' ]</small><br>
+                  <small class="text-muted">[DEPART = '. $index['date_depart'] .' ]</small><br>
                 </div>
               </div>
             </div>';
