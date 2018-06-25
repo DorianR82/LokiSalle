@@ -19,10 +19,10 @@ if(isset($_GET['filtre'])){
     $filtre .= ' AND produit.prix <= '.$_GET['prix'];
   }
   if(isset ($_GET['dateArrivee']) && $_GET['dateArrivee'] != ''){
-    $filtre .= ' AND produit.date_arrivee >= \''.$_GET['dateArrivee'].' 09:00:00\'';
+    $filtre .= ' AND produit.dateArrivee >= \''.$_GET['dateArrivee'].'\'';
   }
   if(isset ($_GET['dateDepart']) && $_GET['dateDepart'] != ''){
-    $filtre .= ' AND produit.date_depart >= \''.$_GET['dateDepart'].' 19:00:00\'';
+    $filtre .= ' AND produit.dateDepart >= \''.$_GET['dateDepart'].'\'';
   }
   print_r($filtre);
   $r_index = execute_requete

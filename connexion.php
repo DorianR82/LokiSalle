@@ -8,7 +8,7 @@ if(userConnect()){
         exit();
 }
 if($_POST){
-        //debug($_POST);
+        debug($_POST);
         $r = execute_requete("SELECT * FROM membre WHERE pseudo = '$_POST[pseudo]' ");
         if($r->rowCount()>=1){
                 $membre = $r->fetch(PDO::FETCH_ASSOC);
