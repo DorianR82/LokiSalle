@@ -1,7 +1,12 @@
 <?php require_once('inc/header.inc.php');?>
 <?php
 //********************* PHP ***********************//
-
+/*
+if($_POST){
+  header('location:profil.php');
+  exit();
+}
+*/
   ///////////////////////////////////////////////////////////////////////////////////////////
  // Si un produit est selectionné on entre dans la boucle sinon retour a la page d'index. //
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -63,13 +68,14 @@ $btn_reza = '';
 if(userConnect()){
 $btn_reza .= '
 <form method="POST" action="fiche_produit.php?id_produit='. $produit['id_produit'] .'">
+<!-- <form method="POST" action="reservation.php?id_produit='. $produit['id_produit'] .'"> -->
   <input type="text" name="membreID" value="'. $_SESSION['membre']['id_membre'] .'" style="display:none">
   <input type="text" name="produitID" value="'. $produit['id_produit'] .'" style="display:none">
   <input type="submit" class="btn btn-dark float-right" name="reservation" value="Reserver">
 </form>';
 }else{
   $btn_reza .= '
-  <form method="GET" action="connexion.php">
+<form method="GET" action="connexion.php">
   <input type="submit" class="btn btn-dark float-right" name="reservation" value="Reserver">
 </form>';
 }              
@@ -101,6 +107,10 @@ if($_POST){
  //////////////////////////////////////////////////////////////////////////////////////
 
   if (isset ($_POST['notation'])){
+    
+    foreach($_POST as $indice => $valeur){
+      $_POST[$indice] = addslashes($valeur);
+    }
 
     $r_notation = execute_requete("SELECT*FROM avis WHERE id_membre = '$_POST[membreID]'");
     $r_note = $r_notation->fetch(PDO::FETCH_ASSOC);

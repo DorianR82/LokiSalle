@@ -23,27 +23,23 @@ if( isset($_GET['action']) && $_GET['action'] == 'suppression'){
 
 //Enregistrement des produits:
 if(!empty($_POST)){
-        //debug($_POST);
+        print_r($_POST);
+        $prout = strval($_POST);print_r($prout);
 
-        $dateA = date_create_from_format('d/m/Y',$_POST['date_arrivee']);
+        $dateA = date_create_from_format('d/m/Y',strval($_POST['date_arrivee']));
         $arrivee =  date_format($dateA, 'Y-m-d');
 
         $dateD = date_create_from_format('d/m/Y',$_POST['date_depart']);
         $depart =  date_format($dateD, 'Y-m-d');
 
-        $photo_bdd = '';
-        if( isset($_GET['action']) && $_GET['action'] == 'modification'){
-                $photo_bdd = $_POST['photo_actuelle'];
-        }
-        if(!empty($_FILES['photo']['name'])){
-                $nom_photo = $_POST['titre'].'_'.$_FILES['photo']['name'];
-                $photo_dossier = $_SERVER['DOCUMENT_ROOT']."/lokisalle/photo/$nom_photo";
-                $photo_bdd = URL."photo/$nom_photo";
-                copy($_FILES['photo']['tmp_name'], $photo_dossier);
-        }
+        var_dump($dateA);
+        var_dump($arrivee);
+        var_dump($dateD);
+        var_dump($depart);
+        /*
         foreach($_POST as $indice => $valeur ){
                 $_POST[$indice] = htmlEntities(addSlashes($valeur));
-        }
+        }*/
         if( isset($_GET['action']) && $_GET['action'] == 'modification'){
                 execute_requete("UPDATE produit SET
                         date_arrivee = '$arrivee',

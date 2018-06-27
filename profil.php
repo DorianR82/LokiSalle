@@ -49,6 +49,7 @@ if(adminConnect()){$statut = '<p><strong>Statut : Administrateur</strong></p>';}
   }
   $content .= '</table>';
 //================================================================?>
+
 <h1>Bonjour <?=$_SESSION['membre']['pseudo']?></h1>
 <p>Voici vos informations :</p>
 <?= $statut ?>

@@ -55,5 +55,3 @@ CREATE TABLE avis(
     date_enregistrement DATETIME NOT NULL,
     PRIMARY KEY (id_avis)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO membre(pseudo,mdp,nom,prenom,email,civilite,statut,date_inscription) VALUE ('admin','zizi','Thoyer','Marie','marie.thoyer@gmail.com','F','1','2016-06-06 14:45:00');
