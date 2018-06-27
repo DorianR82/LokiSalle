@@ -23,7 +23,7 @@ if( isset($_GET['action']) && $_GET['action'] == 'suppression'){
 
 //Enregistrement des produits:
 if(!empty($_POST)){
-        debug($_POST);
+        //debug($_POST);
 
         $dateA = date_create_from_format('d/m/Y',$_POST['date_arrivee']);
         $arrivee =  date_format($dateA, 'Y-m-d');

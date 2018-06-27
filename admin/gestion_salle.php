@@ -111,7 +111,7 @@ if( isset($_GET['action']) && ($_GET['action'] == 'ajout' || $_GET['action'] == 
         if( isset($_GET['id_salle']) ){
                 $r = execute_requete("SELECT * FROM salle WHERE id_salle = $_GET[id_salle]");
                 $salle_actuel = $r->fetch(PDO::FETCH_ASSOC);
-                var_dump($_GET);debug($salle_actuel);
+                //var_dump($_GET);debug($salle_actuel);
         }
 
 $titre = ( isset($salle_actuel['titre']) )  ? $salle_actuel['titre'] : '' ;
@@ -179,7 +179,8 @@ $cp = ( isset($salle_actuel['cp']) )  ? $salle_actuel['cp'] : '' ;
                         <input type="submit" class="form-control" value="'.ucfirst($_GET['action']).'">
                 </div>
 
-        </form>';
+        </form>
+      </div>';
 }
 //================================================================?>
 <?= $content ?>

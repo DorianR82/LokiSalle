@@ -18,9 +18,9 @@ if($_POST){
                 $erreur .= '<div class="alert alert-danger" role="alert">Pseudo indisponible</div>';
         }
         foreach($_POST as $indice => $valeur){
-
                 $_POST[$indice] = addslashes($valeur);
         }
+
         $_POST['mdp'] = password_hash($_POST['mdp'], PASSWORD_DEFAULT);
         if( empty($erreur) ){
                 execute_requete(
@@ -28,7 +28,6 @@ if($_POST){
                     VALUE('$_POST[pseudo]','$_POST[mdp]','$_POST[nom]','$_POST[prenom]','$_POST[email]','$_POST[civilite]',0,NOW())");
 
                 $content .= '<div class="alert alert-success" role="alert">Inscription validée !<a href="'.URL.'connexion.php">Cliquez ici pour vous connectez</a> </div>';
-                var_dump($_POST);
         }
         $content .= $erreur;
 }
