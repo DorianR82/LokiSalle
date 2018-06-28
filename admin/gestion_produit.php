@@ -8,38 +8,27 @@ $content .= '<h3 class="mt-5">GESTION DES PRODUITS</h3>
 $content .= '<a href="?action=affichage">Affichage des produits</a><br>';
 $content .= '<a href="?action=ajout">Ajout d\'un produit</a><br><hr>';
 
-//Suppression d'une produit:
+//Suppression d'un produit:
 if( isset($_GET['action']) && $_GET['action'] == 'suppression'){
         $r = execute_requete("SELECT * FROM produit WHERE id_produit='$_GET[id_produit]'");
         $produit_a_supprimer = $r->fetch(PDO::FETCH_ASSOC);
-        $modif = str_replace('http://localhost',$_SERVER['DOCUMENT_ROOT'],$produit_a_supprimer);
-        $chemin_Photo_a_Supprimer = $modif['photo'];
-        if(!empty($chemin_Photo_a_Supprimer)&&file_exists($chemin_Photo_a_Supprimer)){
-                unlink($chemin_Photo_a_Supprimer);
-        }
         execute_requete("DELETE FROM produit WHERE id_produit=$_GET[id_produit]");
         header('location:gestion_produit.php?action=affichage');
 }
 
 //Enregistrement des produits:
 if(!empty($_POST)){
-        print_r($_POST);
-        $prout = strval($_POST);print_r($prout);
+        var_dump($_POST);
 
-        $dateA = date_create_from_format('d/m/Y',strval($_POST['date_arrivee']));
-        $arrivee =  date_format($dateA, 'Y-m-d');
+        $dateA = date_create_from_format('d/m/Y H:i',($_POST['date_arrivee']));
+        $arrivee =  date_format($dateA, 'Y-m-d H:i');
 
-        $dateD = date_create_from_format('d/m/Y',$_POST['date_depart']);
-        $depart =  date_format($dateD, 'Y-m-d');
+        $dateD = date_create_from_format('d/m/Y H:i',$_POST['date_depart']);
+        $depart =  date_format($dateD, 'Y-m-d H:i');
 
-        var_dump($dateA);
-        var_dump($arrivee);
-        var_dump($dateD);
-        var_dump($depart);
-        /*
         foreach($_POST as $indice => $valeur ){
                 $_POST[$indice] = htmlEntities(addSlashes($valeur));
-        }*/
+        }
         if( isset($_GET['action']) && $_GET['action'] == 'modification'){
                 execute_requete("UPDATE produit SET
                         date_arrivee = '$arrivee',
@@ -99,24 +88,24 @@ if( isset($_GET['action']) && ($_GET['action'] == 'ajout' || $_GET['action'] == 
                 $produit_actuel = $r->fetch(PDO::FETCH_ASSOC);
         }
 
-$date_arrivee = ( isset($produit_actuel['date_arrivee']) )  ? $produit_actuel['date_arrivee'] : '' ;
-$date_depart = ( isset($produit_actuel['date_depart']) )  ? $produit_actuel['date_depart'] : '' ;
+$date_arrivee = ( isset($produit_actuel['date_arrivee']) )  ? date_format(date_create($produit_actuel['date_arrivee']),'d/m/Y H:i') : '' ;
+$date_depart = ( isset($produit_actuel['date_depart']) )  ? date_format(date_create($produit_actuel['date_depart']),'d/m/Y H:i') : '' ;
 $capacite = ( isset($produit_actuel['capacite']) )  ? $produit_actuel['capacite'] : '' ;
 
 $id_salle = ( isset($produit_actuel) && $produit_actuel['id_salle'] == '') ? ' selected':'' ;
 $taille_s = ( isset($article_actuel) && $article_actuel['taille'] == 'S') ? ' selected' :'' ;
 
-$tarif = ( isset($produit_actuel['prix']) )  ? $produit_actuel['prix'] : 'Prix en €uros' ;
-$prix = '';
+$prix = ( isset($produit_actuel['prix']) )  ? $produit_actuel['prix'] : '' ;
+//$prix = '';
         $content .='
         <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
                         <label for="date_arrivee">Date Arrivée</label><br>
-                        <input type="text" name="date_arrivee" class="form-control" id="date_arrivee" value="'.$date_arrivee.'" placeholder="00/00/0000">
+                        <input type="text" name="date_arrivee" class="form-control" id="date_arrivee" value="'.$date_arrivee.'" placeholder="00/00/0000 00:00">
                 </div>
                 <div class="form-group">
                         <label for="date_depart">Date Départ</label><br>
-                        <input type="text" name="date_depart" class="form-control" id="date_depart" value="'.$date_depart.'" placeholder="00/00/0000">
+                        <input type="text" name="date_depart" class="form-control" id="date_depart" value="'.$date_depart.'" placeholder="00/00/0000 00:00">
                 </div>
                 <div class="form-group">
                         <label for="id_salle">Salle</label><br>
@@ -136,7 +125,7 @@ $prix = '';
                 </div>
                 <div class="form-group">
                         <label for="prix">Tarif</label>
-                        <input type="text" name="prix" id="prix" class="form-control" value="" placeholder="'.$tarif.'">'.$prix.'
+                        <input type="text" name="prix" id="prix" class="form-control" value="'.$prix.'" placeholder="Prix en €uros">
                 </div>
                         <div class="form-group">
                         <input type="submit" value="'.ucfirst($_GET['action']).'">
