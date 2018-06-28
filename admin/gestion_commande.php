@@ -1,10 +1,21 @@
 <?php require_once('inc/header.admin.inc.php');?>
 <?php
+//********************* PHP ***********************//
+
+  ///////////////////////////////
+ //Suppression d'une commande //
+///////////////////////////////
+
+if(isset($_GET['action']) && $_GET['action'] == 'suppression' ){
+  execute_requete("DELETE FROM commande WHERE id_commande = $_GET[id_commande]");
+}
+
 //================================================================
-//Suppression d'une commande:
-if(isset($_GET['action']) && $_GET['action'] == 'suppression' ){execute_requete("DELETE FROM commande WHERE id_commande = $_GET[id_commande]");}
-//================================================================
-//Affichage des commandes:
+
+  ////////////////////////////
+ //Affichage des commandes //
+////////////////////////////
+
 $r = execute_requete("SELECT
     c.id_commande,
     m.id_membre,
@@ -48,7 +59,10 @@ $content .= '
   $content .= '</tr>';
   }
 $content .= '</table>';
-//================================================================?>
+
+//********************* FIN PHP ***********************//
+?>
+
 <h3 class="mt-5">GESTION DES COMMANDES</h3>
 <div class="row mt-3">
 <div class="col-md-12 px-0" style="height:2px; width:100%; border-bottom: 1px solid black;"></div>

@@ -93,11 +93,15 @@ if( isset($_GET['action']) && $_GET['action'] == 'affichage' ){
                 $content .= '<tr>';
                 foreach ($ligne as $key => $value) {
                         if($key == 'photo'){
-                                $content .= '<td><img src="'.$value.'" width="80" height="80"></td>';
+                                $content .= '<td><img src="'.$value.'" width="80" height="80"></td>';                      
                         }else{
-                                $content .= '<td>'.$value.'</td>';
+                          if($key == 'description'){
+                            $content .= '<td>'. tronque($value,35) .'</td>';
+                          }else{
+                            $content .= '<td>'.$value.'</td>';
+                          }
                         }
-                }
+                      }
 
                 $content .= '<td><a href="?action=modification&id_salle='.$ligne['id_salle'].'"><i class="fas fa-pencil-alt"></i></a></td>';
                 $content .= '<td><a href="?action=suppression&id_salle='.$ligne['id_salle'].'" onClick="return(confirm(\'En êtes vous certain ?\'))"><i class="fas fa-trash-alt"></i></a></td>';
@@ -131,52 +135,52 @@ $cp = ( isset($salle_actuel['cp']) )  ? $salle_actuel['cp'] : '' ;
         <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
                         <label for="titre">Titre</label>
-                        <input type="text" name="titre" id="titre" class="form-control" value="'.$titre.'" placeholder="Titre de la salle">
+                        <input type="text" name="titre" id="titre" class="form-control" value="'. $titre .'" placeholder="Titre de la salle">
                 </div>
                 <div class="form-group">
                         <label for="description">Description</label>
-                        <textarea id="description" name="description" class="form-control" placeholder="Descriptif de la salle">'.$description.'</textarea>
+                        <textarea id="description" name="description" class="form-control" placeholder="Descriptif de la salle">'. $description .'</textarea>
                 </div>
                 <div class="form-group">
                 <label for="photo">Photo</label><br>
                 <input type="file" name="photo" id="photo" value=""><br>';
                 if(isset($salle_actuel) ){
                         $content .= '<i>Vous pouvez uploader une nouvelle photo</i><br>';
-                        $content .= '<img src=" '.$salle_actuel['photo'].'" height="120" width="120" ><br>';
-                        $content .= '<input type="hidden" name="photo_actuelle" value="'.$salle_actuel['photo'].'"></div>';
+                        $content .= '<img src=" '. $salle_actuel['photo'] .'" height="120" width="120" ><br>';
+                        $content .= '<input type="hidden" name="photo_actuelle" value="'. $salle_actuel['photo'] .'"></div>';
                 }
 
                 $content .='
                 <div class="form-group">
                 <label for="capacite">Capacité</label>
-                <input type="text" name="capacite" id="capacite" class="form-control" value="'.$capacite.'" placeholder="capacite de la salle">
+                <input type="text" name="capacite" id="capacite" class="form-control" value="'. $capacite .'" placeholder="capacite de la salle">
                 </div>
                 <div class="form-group">
                 <label for="categorie">Catégorie</label>
                 <select name="categorie" id="categorie" class="form-control">
-                        <option value="bureau" '.$categorie_Big.'>Bureau</option>
-                        <option value="formation" '.$categorie_Fucking.'>Formation</option>
-                        <option value="reunion" '.$categorie_Rocket.'>Réunion</option>
+                        <option value="bureau" '. $categorie_Big .'>Bureau</option>
+                        <option value="formation" '. $categorie_Fucking .'>Formation</option>
+                        <option value="reunion" '. $categorie_Rocket .'>Réunion</option>
                 </select>
                 </div>
                 <div class="form-group">
                         <label for="pays">Pays</label>
-                        <input type="text" name="pays" id="pays" class="form-control" value="'.$pays.'" placeholder="Pays de la salle">
+                        <input type="text" name="pays" id="pays" class="form-control" value="'. $pays .'" placeholder="Pays de la salle">
                 </div>
                 <div class="form-group">
                         <label for="ville">Ville</label>
-                        <input type="text" name="ville" id="ville" class="form-control" value="'.$ville.'" placeholder="Ville de la salle">
+                        <input type="text" name="ville" id="ville" class="form-control" value="'. $ville .'" placeholder="Ville de la salle">
                 </div>
                 <div class="form-group">
                         <label for="adresse">Adresse</label>
-                        <textarea id="adresse" name="adresse" class="form-control" placeholder="Adresse de la salle">'.$adresse.'</textarea>
+                        <textarea id="adresse" name="adresse" class="form-control" placeholder="Adresse de la salle">'. $adresse .'</textarea>
                 </div>
                 <div class="form-group">
                         <label for="cp">Code Postal</label>
-                        <input type="text" name="cp" class="form-control" id="cp" value="'.$cp.'">
+                        <input type="text" name="cp" class="form-control" id="cp" value="'. $cp .'">
                 </div>
                         <div class="form-group">
-                        <input type="submit" class="form-control" value="'.ucfirst($_GET['action']).'">
+                        <input type="submit" class="form-control" value="'. ucfirst($_GET['action']) .'">
                 </div>
 
         </form>

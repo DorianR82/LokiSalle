@@ -53,4 +53,15 @@ function adminConnect(){
 }
 
 //=====================================================================================
+// FONCTION découpe de texte descriptif pour l'index
+  
+function tronque($str, $nb) {
+	if (strlen($str) > $nb) {
+		$str = substr($str, 0, $nb);
+		$position_espace = strrpos($str," ");
+		$texte = substr($str,0,$position_espace); 
+		$str = $texte." ...";
+	}
+	return $str;
+}
 ?>
