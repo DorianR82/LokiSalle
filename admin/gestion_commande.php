@@ -8,6 +8,7 @@
 
 if(isset($_GET['action']) && $_GET['action'] == 'suppression' ){
   execute_requete("DELETE FROM commande WHERE id_commande = $_GET[id_commande]");
+  execute_requete("UPDATE produit SET etat = 'libre' WHERE id_produit = $_GET[id_produit]");
 }
 
 //================================================================
@@ -25,6 +26,7 @@ $r = execute_requete("SELECT
     p.date_arrivee,
     p.date_depart,
     p.prix,
+    p.id_produit,
     c.date_enregistrement
   FROM
     commande c,
@@ -55,7 +57,7 @@ $content .= '
     $content .= '<td>'. $ligne['id_salle'] .' - '. $ligne['titre'] .'<br> du '. $ligne['date_arrivee'] .' au '. $ligne['date_depart'] .'</td>';
     $content .= '<td>'. $ligne['prix'] .'</td>';
     $content .= '<td>'. $ligne['date_enregistrement'] .'</td>';
-    $content .= '<td><a href="?action=suppression&id_commande='. $ligne['id_commande'] .'"  onClick="return( confirm(\'En êtes vous scertain?\') )" ><i class="fas fa-trash-alt"></i></a></td>';
+    $content .= '<td><a href="?action=suppression&id_commande='. $ligne['id_commande'] .'&id_produit='. $ligne['id_produit'] .'"  onClick="return( confirm(\'En êtes vous scertain?\') )" ><i class="fas fa-trash-alt"></i></a></td>';
   $content .= '</tr>';
   }
 $content .= '</table>';

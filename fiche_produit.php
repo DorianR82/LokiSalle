@@ -1,62 +1,54 @@
 <?php require_once('inc/header.inc.php');?>
 <?php
 //********************* PHP ***********************//
-/*
-if($_POST){
-  header('location:profil.php');
-  exit();
-}
-*/
-  ///////////////////////////////////////////////////////////////////////////////////////////
- // Si un produit est selectionné on entre dans la boucle sinon retour a la page d'index. //
-///////////////////////////////////////////////////////////////////////////////////////////
 
-if( isset($_GET['id_produit']) ){
+  //////////////////////////////////
+ // Récolte des données afficher //
+//////////////////////////////////
 
-  $resproduit = execute_requete(
-    "SELECT *
+$resproduit = execute_requete(
+  "SELECT *
+  FROM produit
+  WHERE id_produit = '$_GET[id_produit]' ");
+
+$produit = $resproduit->fetch(PDO::FETCH_ASSOC);
+
+$ressalle = execute_requete(
+  "SELECT *
+  FROM salle
+  WHERE id_salle = (
+    SELECT id_salle
     FROM produit
-    WHERE id_produit = '$_GET[id_produit]' ");
-
-  $produit = $resproduit->fetch(PDO::FETCH_ASSOC);
-
-  $ressalle = execute_requete(
-    "SELECT *
-    FROM salle
-    WHERE id_salle = (
-      SELECT id_salle
-      FROM produit
-      WHERE id_produit = '$_GET[id_produit]')");
-
-  $salle = $ressalle->fetch(PDO::FETCH_ASSOC);
-
-   ///////////////////////////////////////////////////////////////////////////
-  // Calcul de la moyenne des notes de la salle pour afficher les étoiles. //
- ///////////////////////////////////////////////////////////////////////////
-
-  $resNote = execute_requete(
-    "SELECT ROUND(AVG(note))
-    AS note
-    FROM avis
-    WHERE id_salle = $produit[id_salle]
-    ");
-
-    $moyenne = $resNote->fetch(PDO::FETCH_ASSOC);
-    $etoilevide = 5 - $moyenne['note'];
-
-    /////////////////////////////////////////////////////////////////////////////
-   // Affichage du titre de la salle et de la note illustrée par des étoiles. //
-  /////////////////////////////////////////////////////////////////////////////
+    WHERE id_produit = '$_GET[id_produit]')");
   
-  $enTete = $salle['titre'].' ';
-  for ($i=0; $i < $moyenne['note']; $i++) {
-    $enTete .= '★';
-  }
-  for ($i=0; $i < $etoilevide; $i++) {
-    $enTete .= '☆';
-  }
+$salle = $ressalle->fetch(PDO::FETCH_ASSOC);
 
-}else{ header('location:index.php'); exit(); }
+  ///////////////////////////////////////////////////////////////////////////
+ // Calcul de la moyenne des notes de la salle pour afficher les étoiles. //
+///////////////////////////////////////////////////////////////////////////
+
+$resNote = execute_requete(
+  "SELECT ROUND(AVG(note))
+  AS note
+  FROM avis
+  WHERE id_salle = $produit[id_salle]
+  ");
+
+$moyenne = $resNote->fetch(PDO::FETCH_ASSOC);
+$etoilevide = 5 - $moyenne['note'];
+
+  /////////////////////////////////////////////////////////////////////////////
+ // Affichage du titre de la salle et de la note illustrée par des étoiles. //
+/////////////////////////////////////////////////////////////////////////////
+
+$enTete = $salle['titre'].' ';
+
+for ($i=0; $i < $moyenne['note']; $i++) {
+  $enTete .= '★';
+}
+for ($i=0; $i < $etoilevide; $i++) {
+  $enTete .= '☆';
+}
 
 //================================================================
 
@@ -68,7 +60,6 @@ $btn_reza = '';
 if(userConnect()){
 $btn_reza .= '
 <form method="POST" action="fiche_produit.php?id_produit='. $produit['id_produit'] .'">
-<!-- <form method="POST" action="reservation.php?id_produit='. $produit['id_produit'] .'"> -->
   <input type="text" name="membreID" value="'. $_SESSION['membre']['id_membre'] .'" style="display:none">
   <input type="text" name="produitID" value="'. $produit['id_produit'] .'" style="display:none">
   <input type="submit" class="btn btn-dark float-right" name="reservation" value="Reserver">
@@ -98,6 +89,8 @@ if($_POST){
         $_POST[produitID],
         NOW()
       )");
+    header('location:profil.php');
+    exit();
   }
 
    //////////////////////////////////////////////////////////////////////////////////////

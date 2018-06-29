@@ -13,6 +13,7 @@ if(adminConnect()){$statut = '<p><strong>Statut : Administrateur</strong></p>';}
 
 if(isset($_GET['action']) && $_GET['action'] == 'suppression' ){
   execute_requete("DELETE FROM commande WHERE id_commande = $_GET[id_commande]");
+  execute_requete("UPDATE produit SET etat = 'libre' WHERE id_produit = $_GET[id_produit]");
 }
 
 //================================================================
@@ -69,7 +70,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'suppression' ){
       $content .= '<td>' .$ligne['adresse'].' '.$ligne['ville'].' '.$ligne['pays']. '<br> Disponible du ' .$ligne['date_arrivee']. ' au ' .$ligne['date_depart'] . '<br> Capacité max : ' . $ligne['capacite'].'</td>';
       $content .= '<td>' . $ligne['prix'] . '</td>';
       $content .= '<td><img src="' . $ligne['photo'] . '" width="80" height="80"></td>';
-      $content .= '<td><a href="?action=suppression&id_commande='.$ligne['id_commande'].'"  onClick="return( confirm(\'En êtes vous scertain?\') )" ><i class="fas fa-trash-alt"></i></a></td>';
+      $content .= '<td><a href="?action=suppression&id_commande='. $ligne['id_commande'] .'&id_produit='. $ligne['id_produit'] .'"  onClick="return( confirm(\'En êtes vous scertain?\') )" ><i class="fas fa-trash-alt"></i></a></td>';
     $content .= '</tr>';
   }
   $content .= '</table>';
